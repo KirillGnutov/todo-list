@@ -5,16 +5,17 @@ import { defaultMaxListeners } from "events";
 
 const Header = ()=>{
     const navItem=[
-        {path: "/", text:"main"}
+        {path: "/", text:"main"},
+        {path: "/usestate", text:"state"},
     ]
     return(
         <header className={Styles.header}>
             <nav>
-                {navItem.map((item)=>{
-                    <NavLink key={item.path} to = {item.path}>
+                {navItem.map((item)=>(
+                    <NavLink key={item.path} to={item.path}>
                         {item.text}
                     </NavLink>
-                })}
+                ))}
             </nav>
         </header>
     )
