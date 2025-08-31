@@ -1,0 +1,13 @@
+.layout{
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main{
+  flex: 1;
+
+}
+.main > div{
+  height: 100%;
+}

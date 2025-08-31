@@ -1,12 +1,11 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import Styles from "./Header.module.css";
-import { defaultMaxListeners } from "events";
-
 const Header = ()=>{
     const navItem=[
         {path: "/", text:"main"},
         {path: "/usestate", text:"state"},
+        {path: "/auth", text:"Регистрация"}
     ]
     return(
         <header className={Styles.header}>

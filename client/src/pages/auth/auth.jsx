@@ -1,6 +1,5 @@
-import { resolve } from 'path';
 import React, { useReducer } from 'react';
-
+import styles from './auth.module.css'
 const initialForm = {
 	username: '',
 	password: '',
@@ -35,7 +34,27 @@ const validateForm = (formData) => {
   if(!formData.username.trim()){
     errors.username = "Имя пользователя обязательно!!!"
   }
+	else if(/[^a-zA-Z0-9]/.test(formData.username)){
+		errors.username = "Использованы запрещенные символы!!!"
+	}
 
+	if(!formData.email.trim()){
+		errors.email = "Почта обязательная!!!"
+	}
+	else if(!/\S+@\S+\.\S+/.test(formData.email)){
+		errors.email = "Некоректная почта!!!"
+	}
+
+	if(!formData.password.trim()){
+		errors.password="Введите пароль!!!"
+	}
+	else if(formData.password.trim().length < 6){
+		errors.password="Короткий пароль!!!"
+	}
+
+	if(formData.password != formData.confirmPassword){
+		errors.confirmPassword = "Пароли не совпадают!!!"
+	}
 	return errors;
 
 };
@@ -64,15 +83,18 @@ const AuthPage = () => {
 	};
 
 	return (
-		<div>
-			<form onSubmit={handleSubmit}>
+		<div className={styles.authPage}>
+			<form onSubmit={handleSubmit} className={styles.form}>
 				<div>
-					<label>
+					<label className={styles.formRow}>
 						username:
 						<input
 							type="text"
 							value={state.username}
 							onChange={(e) => handleInputChange('username', e.target.value)}
+							style = {{
+								border: state.errors.username?"1px solid red":"none"
+							}}
 						/>
 					</label>
           {state.errors.username && (
@@ -82,26 +104,51 @@ const AuthPage = () => {
           )}
 				</div>
 				<div>
-					<label>
+					<label className={styles.formRow}>
             email:
-						<input type="text" />
+						<input type="text" 
+							value={state.email}
+							onChange={(e) => handleInputChange('email', e.target.value)}
+						/>
+
 					</label>
+					{state.errors.email && (
+						<span>
+							{state.errors.email}
+						</span>
+					)}
 				</div>
 				<div>
-					<label>
-						<input type="text" />
+					<label className={styles.formRow}>
+						password:
+						<input type="password" 
+							value={state.password}
+							onChange={(e)=> handleInputChange('password', e.target.value)}
+						/>
 					</label>
+					{state.errors.password && (
+						<span>
+							{state.errors.password}
+						</span>
+					)}
 				</div>
 				<div>
-					<label>
-						<input type="text" />
+					<label className={styles.formRow}>
+						confirmPassword:
+						<input type="password" 
+							value={state.confirmPassword}
+							onChange={(e)=> handleInputChange('confirmPassword', e.target.value)}
+						/>
 					</label>
+					{state.errors.confirmPassword && (
+						<span>
+							{state.errors.confirmPassword}
+						</span>
+					)}
 				</div>
-				<div>
-					<label>
-						<input type="text" />
-					</label>
-				</div>
+				<button type='submit' disabled={state.isSubmitting} className={styles.button}>
+					{state.isSubmitting?"регистрация...":"зарегистрироваться"}
+				</button>
 			</form>
 		</div>
 	);

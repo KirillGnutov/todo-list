@@ -1,13 +1,14 @@
 import React, { Suspense } from "react";
 import { HashRouter, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout/Layout";
-import Styles from "./App.module.css";
+import "./App.module.css";
 import HomePage from "./pages/Home/Home";
-import UseStatePage from './pages/usestate/usestate';
+import AuthPage from "./pages/auth/auth";
 
 const rootes = {
   "/": HomePage,
-  "/usestate": UseStatePage,
+  "/usestate": React.lazy(()=>import("./pages/usestate/usestate")),
+  "/auth": AuthPage,
 };
 
 const App = () => {
