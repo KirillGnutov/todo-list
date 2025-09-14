@@ -57,7 +57,7 @@ ws.send(
     JSON.stringify({
         type: "system",
         data: "Connected to chat",
-        timestamp: new DataTransfer(), toLocaleTimeString(),
+        timestamp: new DataTransfer().toLocaleTimeString()
     })
 );
 
@@ -67,7 +67,7 @@ ws.on("message", function message(data) {
     const messageData = JSON.stringify({
         type: "message",
         data: data.toString(),
-        timestamp: new Date(), toLocaleTimeString(),
+        timestamp: new Date().toLocaleTimeString()
     })
 
 

@@ -6,16 +6,76 @@
   <title>Document</title>
 </head>
 <body>
-  <h1><b>Chat</b></h1>
-  <div id="">
-    
+  <h1 style="text-align: center;"><b>CHAT ROOM</b></h1>
+  <div id="status" class="status">
+      Connecting...
   </div>
   
-  <div id="">
-    <input type="text"></input>
-    <button>Отправить</button>
+  <div id="messages"></div>
+  <div class="input-container">
+    <input type="text" id="messageInput" placeholder="Type your message..." autocomplete="off" disabled/>
+    <button id="sendButton">Send</button>
   </div>  
  
+<script>
+  const messagesContainer = document.getElementById("messages");
+  const messageInput = document.getElementById("messageInput");
+  const sendButton = document.getElementById("sendButton");
+  const statusDiv = document.getElementById("status");
 
+  let socket = null;
+  let reconnectAttempts = 0;
+  const maxReconnectAttempts = 5;
+
+  function connectWebSocket(){
+    try{Host = window.location.hostname === "127.0.0.1" ? "localhost:3000" : window.location.host;
+    socket = new WebSocket(`${protocol}//${wsHost}/ws`);
+
+    setupSocketEvents();
+    }catch(error){
+      console.error("Failed to create WebSoket:", error);
+      hadleDisconnection();
+    }
+  }
+
+  function setupSocketEvents(){
+    socket.onopen = function(){
+      console.log("WebSocket connected");
+      statusDiv.textContent = "Connected";
+    }
+  } 
+
+  function setupSocketEvents(){
+    socket.onopen = function (){
+      console.log("WebSocket connected");
+      statusDiv.textContent = "Connected";
+      statusDiv.style.backgroundColor = '#f1f8e9';
+      messageInput.disabled = false;
+      sendButton.disabled = false;
+      reconnectAttempts = 0;
+      addMessage("Connected to chat server", "system");
+      messageInput.focus();
+    };
+
+    socket.onmessage = function (event){
+      try{
+        const data = JSON.parse(event.data);
+        adMessage(data.data, data.type, data.timestamp);
+      } catch (e) {
+        addMessage(event.data , "message");
+      }
+    }
+  }
+
+  socket.onerror = function(error){
+    console.error("WebSocket error:",error);
+    statusDiv.textContent = "Connection error";
+    statusDiv.style.backgroundColor = "#ffebee";
+  }
+
+  socket.onclose = function(event){
+    console.log("WebSocket closed:", event.code, event.reason)
+  }
+</script>
 </body>
 </html>
